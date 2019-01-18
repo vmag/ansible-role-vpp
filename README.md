@@ -1,4 +1,4 @@
-Ansible role to deploy FD.IO VPP on Centos 7.
+Ansible role to deploy FD.IO VPP v18.10 on Centos 7.
 
 vpp and honeycomb daemons are disabled, you need to create /etc/vpp/startup.conf and start vpp daemon:  
 
