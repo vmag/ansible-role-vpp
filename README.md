@@ -1,4 +1,5 @@
 Ansible role to deploy FD.IO VPP v18.10 on Centos 7.
+To run this role, you need to clone this repository to your Ansible roles folder and execute a playbook:
 
     ansible-playbook vpp.yaml
 
