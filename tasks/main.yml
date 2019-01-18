@@ -73,3 +73,13 @@
   service:
     name: vpp
     enabled: no
+
+- name: Stop service firewalld, if started
+  service:
+    name: firewalld
+    state: stopped
+
+- name: Disable firewalld service
+  service:
+    name: firewalld
+    enabled: no
