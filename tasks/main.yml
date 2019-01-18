@@ -2,7 +2,11 @@
 # tasks file for vpp
 - name: Install vpp repo
   copy: src=files/fdio.repo dest=/etc/yum.repos.d/fdio.repo mode=0600 force=no
-  tags: nginx
+  tags: repo
+
+- name: upgrade all packages
+  yum: name=* state=latest
+
 - rpm_key:
     state: present
     key: "https://packagecloud.io/fdio/1810/gpgkey"
@@ -15,6 +19,8 @@
   with_items:
   - pygpgme
   - yum-utils
+  - dpdk
+  - dpdk-tools
   - vpp
   - vpp-plugins
   - vpp-api-python
@@ -29,7 +35,7 @@
     dest: /usr/sbin
     mode: 0755
   with_items:
-    ['cpu_layout.py','dpdk-devbind.py','dpdk-pmdinfo.py','dpdk-setup.sh','dpdk-telemetry-client.py']
+    ['dpdk-pmdinfo.py','dpdk-setup.sh','dpdk-telemetry-client.py']
   tags: tools
 
 
