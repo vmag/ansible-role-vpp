@@ -22,7 +22,7 @@
 - name: upgrade all packages
   yum: name=* state=latest
 
-- name: install the vpp 18.10
+- name: install kernel-lt from elrepo
   yum:
     name: kernel-lt
     enablerepo: elrepo-kernel
