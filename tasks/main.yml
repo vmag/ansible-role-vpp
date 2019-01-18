@@ -4,19 +4,41 @@
   copy: src=files/fdio.repo dest=/etc/yum.repos.d/fdio.repo mode=0600 force=no
   tags: repo
 
-- name: upgrade all packages
-  yum: name=* state=latest
+- name: Install elrepo repo
+  copy: src=files/elrepo.repo dest=/etc/yum.repos.d/elrepo.repo mode=0600 force=no
+  tags: repo
+
+- rpm_key:
+    state: present
+    key: "https://www.elrepo.org/RPM-GPG-KEY-elrepo.org"
 
 - rpm_key:
     state: present
     key: "https://packagecloud.io/fdio/1810/gpgkey"
 
 - name: update repo cache for the new repo
-  command: yum -q makecache -y --disablerepo=* --enablerepo=fdio_1810
+  command: yum -q makecache -y
 
+- name: upgrade all packages
+  yum: name=* state=latest
+
+- name: install the vpp 18.10
+  yum:
+    name: kernel-lt
+    enablerepo: elrepo-kernel
+    state: latest
+
+- name: Set default kernel
+  command: grub2-set-default 0
+  
+- name: Update grub
+  command: grub2-mkconfig -o /boot/grub2/grub.cfg
+  
 - name: Install packages
   package: name={{item}} state=installed
   with_items:
+  - libselinux-python
+  - libsemanage-python
   - pygpgme
   - yum-utils
   - dpdk
@@ -38,6 +60,16 @@
     ['dpdk-pmdinfo.py','dpdk-setup.sh','dpdk-telemetry-client.py']
   tags: tools
 
+- name: Set SELinux in permissive mode until the machine is rebooted
+  command: setenforce 0
+  ignore_errors: true
+  changed_when: false
 
+- name: Disable SELinux at next reboot
+  selinux:
+    state: disabled
 
-
+- name: Disable vpp service
+  service:
+    name: vpp
+    enabled: no
