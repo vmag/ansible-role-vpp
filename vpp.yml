@@ -3,4 +3,5 @@
   user: root
 
   roles:
-  - "/srv/git/ansible-role-vpp"
+  - ansible-role-vpp
+  
