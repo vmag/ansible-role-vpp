@@ -1,0 +1,6 @@
+---
+- hosts: fdio-vpp
+  user: root
+
+  roles:
+  - "/srv/git/ansible-role-vpp"
