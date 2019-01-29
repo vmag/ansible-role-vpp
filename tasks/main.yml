@@ -1,18 +1,28 @@
 ---
 # tasks file for vpp
 - name: Install vpp repo
-  copy: src=files/fdio.repo dest=/etc/yum.repos.d/fdio.repo mode=0600 force=no
+  copy: 
+    src: files/fdio.repo
+    dest: /etc/yum.repos.d/fdio.repo' 
+    mode: 0600 
+    force: no
   tags: repo
 
 - name: Install elrepo repo
-  copy: src=files/elrepo.repo dest=/etc/yum.repos.d/elrepo.repo mode=0600 force=no
+  copy: 
+    src: files/elrepo.repo 
+    dest: /etc/yum.repos.d/elrepo.repo
+    mode: 0600 
+    force: no
   tags: repo
 
-- rpm_key:
+- name: Add elrepo
+  rpm_key:
     state: present
     key: "https://www.elrepo.org/RPM-GPG-KEY-elrepo.org"
 
-- rpm_key:
+- name: Add packagecloud GPG key
+  rpm_key:
     state: present
     key: "https://packagecloud.io/fdio/1810/gpgkey"
 
@@ -20,7 +30,9 @@
   command: yum -q makecache -y
 
 - name: upgrade all packages
-  yum: name=* state=latest
+  yum: 
+    name: '*' 
+    state: latest
 
 - name: install kernel-lt from elrepo
   yum:
@@ -35,20 +47,21 @@
   command: grub2-mkconfig -o /boot/grub2/grub.cfg
   
 - name: Install packages
-  package: name={{item}} state=installed
-  with_items:
-  - libselinux-python
-  - libsemanage-python
-  - pygpgme
-  - yum-utils
-  - dpdk
-  - dpdk-tools
-  - vpp
-  - vpp-plugins
-  - vpp-api-python
-  - vpp-api-lua
-  - vpp-api-java
-  - honeycomb
+  yum: 
+    state: present
+    name:
+      - libselinux-python
+      - libsemanage-python
+      - pygpgme
+      - yum-utils
+      - dpdk
+      - dpdk-tools
+      - vpp
+      - vpp-plugins
+      - vpp-api-python
+      - vpp-api-lua
+      - vpp-api-java
+      - honeycomb
   tags: packages
 
 - name: Copy DPDK tools
